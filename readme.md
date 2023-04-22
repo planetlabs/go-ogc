@@ -2,7 +2,16 @@
 
 The go-ogc module provides Go packages for working with OGC APIs.
 
-## The api package
+[![Go Reference](https://pkg.go.dev/badge/github.com/planetlabs/go-ogc.svg)](https://pkg.go.dev/github.com/planetlabs/go-ogc)
+![Tests](https://github.com/planetlabs/go-ogc/actions/workflows/test.yml/badge.svg)
+
+This repository contains the source for a set of [Golang packages](https://pkg.go.dev/github.com/planetlabs/go-ogc), an `xyz2ogc` command line utility, and examples of OGC API metadata documents.  See below for additional documentation on each of these.
+
+## Go packages
+
+See the [package documentation]((https://pkg.go.dev/github.com/planetlabs/go-ogc)) for a complete reference.  Below is a summary of each of the packages.
+
+### The api package
 
 The `api` package provides structs for implementing the following standards:
 
@@ -10,13 +19,13 @@ The `api` package provides structs for implementing the following standards:
  * [OGC API – Tiles](https://ogcapi.ogc.org/tiles/)
  * [OGC API – Features](https://ogcapi.ogc.org/features/)
 
-## The filter package
+### The filter package
 
 The `filter` package provides structs for encoding and decoding CQL2 filters as JSON.
 
-## xyz2ogc
+## The xyz2ogc command line utility
 
-Generate [OGC API – Tiles](https://ogcapi.ogc.org/tiles/) metadata from exiting XYZ tilesets.
+The `xyz2ogc` command line utility can be used to generate [OGC API – Tiles](https://ogcapi.ogc.org/tiles/) metadata from exiting XYZ tilesets.
 
 ### Use
 
@@ -148,3 +157,7 @@ The `Extent` field allows limiting the extent of the tileset.  The extent is des
 URL = "https://example.com/limited-extent/{z}/{x}/{y}.png"
 Extent = [-120, 40, -110, 50]
 ```
+
+## OGC – API examples
+
+See the [examples directory](./examples/) for example metadata documents for various OGC API standards.
