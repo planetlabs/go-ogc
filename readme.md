@@ -27,6 +27,16 @@ The `filter` package provides structs for encoding and decoding CQL2 filters as 
 
 The `xyz2ogc` command line utility can be used to generate [OGC API – Tiles](https://ogcapi.ogc.org/tiles/) metadata from exiting XYZ tilesets.
 
+### Installation
+
+The `xyz2ogc` program can be installed by downloading one of the archives from [the latest release](https://github.com/planetlabs/go-ogc/releases).
+
+Extract the archive and place the `xyz2ogc` executable somewhere on your path.  See a list of available commands by running `xyz2ogc` in your terminal.
+
+Homebrew users can install the `xyz2ogc` program with [`brew`](https://brew.sh/):
+
+    brew install planetlabs/tap/go-ogc
+
 ### Use
 
 The `xyz2ogc` program reads a configuration file (`config.toml` by default) for information about a list of XYZ tilesets.  The program will then generate OGC API – Tiles compliant metadata for the configured tilesets.
