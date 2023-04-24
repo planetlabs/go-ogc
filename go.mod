@@ -5,7 +5,7 @@ go 1.18
 require (
 	github.com/BurntSushi/toml v1.2.1
 	github.com/alecthomas/kong v0.7.1
-	github.com/getkin/kin-openapi v0.115.0
+	github.com/getkin/kin-openapi v0.116.0
 	github.com/go-playground/validator/v10 v10.12.0
 	github.com/labstack/echo/v4 v4.10.2
 	github.com/phayes/freeport v0.0.0-20220201140144-74d24b5ae9f5
