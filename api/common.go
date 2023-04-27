@@ -14,6 +14,12 @@
 
 package api
 
+import (
+	"encoding/json"
+
+	"github.com/mitchellh/mapstructure"
+)
+
 // Structs for the Common spec.
 // http://docs.ogc.org/DRAFTS/19-072.html
 
@@ -21,15 +27,46 @@ package api
 //
 // Implementations that conform to the Common Core Conformance class (http://www.opengis.net/spec/ogcapi-common-1/1.0/conf/core)
 // must link to associated resources with the fields below.
+//
+// The AdditionalFields map will be populated with any additional fields when unmarshalling JSON.
+// You can use this map to add additional fields when marshalling JSON.
 type Link struct {
-	Href      string `json:"href"`
-	Rel       string `json:"rel"`
-	Type      string `json:"type,omitempty"`
-	HrefLang  string `json:"hreflang,omitempty"`
-	Title     string `json:"title,omitempty"`
-	Length    int    `json:"length,omitempty"`
-	Templated bool   `json:"templated,omitempty"`
-	VarBase   string `json:"varBase,omitempty"`
+	Href             string         `mapstructure:"href"`
+	Rel              string         `mapstructure:"rel"`
+	Type             string         `mapstructure:"type,omitempty"`
+	HrefLang         string         `mapstructure:"hreflang,omitempty"`
+	Title            string         `mapstructure:"title,omitempty"`
+	Length           int            `mapstructure:"length,omitempty"`
+	Templated        bool           `mapstructure:"templated,omitempty"`
+	VarBase          string         `mapstructure:"varBase,omitempty"`
+	AdditionalFields map[string]any `mapstructure:",remain"`
+}
+
+var (
+	_ json.Marshaler   = (*Link)(nil)
+	_ json.Unmarshaler = (*Link)(nil)
+)
+
+func (link *Link) MarshalJSON() ([]byte, error) {
+	m := map[string]any{}
+	if err := mapstructure.Decode(link, &m); err != nil {
+		return nil, err
+	}
+	// remove if https://github.com/mitchellh/mapstructure/issues/279 is fixed
+	delete(m, "AdditionalFields")
+	for k, v := range link.AdditionalFields {
+		m[k] = v
+	}
+	return json.Marshal(m)
+}
+
+func (link *Link) UnmarshalJSON(data []byte) error {
+	m := map[string]any{}
+	if err := json.Unmarshal(data, &m); err != nil {
+		return err
+	}
+
+	return mapstructure.Decode(m, link)
 }
 
 type Conformance struct {
