@@ -80,3 +80,8 @@ type Root struct {
 	Description string  `json:"description,omitempty"`
 	Attribution string  `json:"attribution,omitempty"`
 }
+
+type Extension interface {
+	URI() string
+	Encode(map[string]any) error
+}
