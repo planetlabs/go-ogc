@@ -6,7 +6,7 @@ require (
 	github.com/BurntSushi/toml v1.2.1
 	github.com/alecthomas/kong v0.7.1
 	github.com/getkin/kin-openapi v0.116.0
-	github.com/go-playground/validator/v10 v10.13.0
+	github.com/go-playground/validator/v10 v10.14.0
 	github.com/labstack/echo/v4 v4.10.2
 	github.com/mitchellh/mapstructure v1.5.0
 	github.com/phayes/freeport v0.0.0-20220201140144-74d24b5ae9f5
@@ -16,6 +16,7 @@ require (
 
 require (
 	github.com/davecgh/go-spew v1.1.1 // indirect
+	github.com/gabriel-vasile/mimetype v1.4.2 // indirect
 	github.com/go-openapi/jsonpointer v0.19.5 // indirect
 	github.com/go-openapi/swag v0.19.5 // indirect
 	github.com/go-playground/locales v0.14.1 // indirect
@@ -24,7 +25,7 @@ require (
 	github.com/invopop/yaml v0.1.0 // indirect
 	github.com/josharian/intern v1.0.0 // indirect
 	github.com/labstack/gommon v0.4.0 // indirect
-	github.com/leodido/go-urn v1.2.3 // indirect
+	github.com/leodido/go-urn v1.2.4 // indirect
 	github.com/mailru/easyjson v0.7.7 // indirect
 	github.com/mattn/go-colorable v0.1.13 // indirect
 	github.com/mattn/go-isatty v0.0.17 // indirect
