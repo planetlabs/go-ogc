@@ -91,3 +91,8 @@ func (r *RecordCore) Encode(featureMap map[string]any) error {
 
 	return nil
 }
+
+func (r *RecordCore) Decode(data []byte) error {
+	// TODO: implement this
+	return nil
+}
