@@ -84,4 +84,5 @@ type Root struct {
 type Extension interface {
 	URI() string
 	Encode(map[string]any) error
+	Decode([]byte) error
 }

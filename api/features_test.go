@@ -18,6 +18,7 @@ package api_test
 
 import (
 	"encoding/json"
+	"errors"
 	"fmt"
 	"testing"
 
@@ -95,14 +96,17 @@ func TestFeatureMarshal(t *testing.T) {
 	}
 }
 
-type TestExtension struct {
+var (
+	_ api.Extension = (*FeatureExtension)(nil)
+	_ api.Extension = (*CollectionExtension)(nil)
+)
+
+type FeatureExtension struct {
 	RootFoo   string
 	NestedBar string
 }
 
-var _ api.Extension = (*TestExtension)(nil)
-
-func (e *TestExtension) Encode(featureMap map[string]any) error {
+func (e *FeatureExtension) Encode(featureMap map[string]any) error {
 	featureMap["test:foo"] = e.RootFoo
 	propertiesMap, ok := featureMap["properties"].(map[string]any)
 	if !ok {
@@ -112,7 +116,28 @@ func (e *TestExtension) Encode(featureMap map[string]any) error {
 	return nil
 }
 
-func (e *TestExtension) URI() string {
+func (e *FeatureExtension) Decode(data []byte) error {
+	return errors.New("not implemented")
+}
+
+func (e *FeatureExtension) URI() string {
+	return "https://example.com/test-extension"
+}
+
+type CollectionExtension struct {
+	Classes []string
+}
+
+func (e *CollectionExtension) Encode(collectionMap map[string]any) error {
+	collectionMap["classes"] = e.Classes
+	return nil
+}
+
+func (e *CollectionExtension) Decode(data []byte) error {
+	return json.Unmarshal(data, e)
+}
+
+func (e *CollectionExtension) URI() string {
 	return "https://example.com/test-extension"
 }
 
@@ -123,7 +148,7 @@ func TestFeatureMarshalExtension(t *testing.T) {
 			"one": "core-property",
 		},
 		Extensions: []api.Extension{
-			&TestExtension{
+			&FeatureExtension{
 				RootFoo:   "foo-value",
 				NestedBar: "bar-value",
 			},
@@ -146,4 +171,43 @@ func TestFeatureMarshalExtension(t *testing.T) {
 	actual, err := json.Marshal(feature)
 	require.NoError(t, err)
 	assert.JSONEq(t, expected, string(actual))
+}
+
+func TestCollectionMarshalExtension(t *testing.T) {
+	collection := &api.Collection{
+		Id: "test-collection",
+		Extensions: []api.Extension{
+			&CollectionExtension{
+				Classes: []string{"foo", "bar"},
+			},
+		},
+		Links: []*api.Link{},
+	}
+
+	expected := `{
+		"id": "test-collection",
+		"classes": ["foo", "bar"],
+		"links": []
+	}`
+
+	actual, err := json.Marshal(collection)
+	require.NoError(t, err)
+	assert.JSONEq(t, expected, string(actual))
+}
+
+func TestCollectionUnmarshalExtension(t *testing.T) {
+	data := `{
+		"id": "test-collection",
+		"classes": ["foo", "bar"],
+		"links": []
+	}`
+
+	extension := &CollectionExtension{}
+	collection := &api.Collection{
+		Extensions: []api.Extension{extension},
+	}
+
+	err := json.Unmarshal([]byte(data), collection)
+	require.NoError(t, err)
+	assert.Equal(t, []string{"foo", "bar"}, extension.Classes)
 }
