@@ -27,6 +27,49 @@ import (
 	"github.com/stretchr/testify/require"
 )
 
+func TestCollectionMarshal(t *testing.T) {
+	cases := []struct {
+		name       string
+		collection *api.Collection
+		expected   string
+	}{
+		{
+			name: "minimal",
+			collection: &api.Collection{
+				Id:          "test-1",
+				Title:       "Test Collection",
+				Description: "Test collection description.",
+				Extent: &api.Extent{
+					Spatial: &api.SpatialExtent{
+						Bbox: [][]float64{{1, 2, 3, 4}},
+					},
+				},
+				Links: []*api.Link{},
+			},
+			expected: `{
+				"id": "test-1",
+				"title": "Test Collection",
+				"description": "Test collection description.",
+				"extent": {
+					"spatial": {
+						"bbox": [[1, 2, 3, 4]]
+					}
+				},
+				"links": []
+			}`,
+		},
+	}
+
+	for _, tc := range cases {
+		t.Run(tc.name, func(t *testing.T) {
+			actual, err := json.Marshal(tc.collection)
+			require.NoError(t, err)
+			assert.JSONEq(t, tc.expected, string(actual))
+		})
+	}
+
+}
+
 func TestFeatureMarshal(t *testing.T) {
 	cases := []struct {
 		name     string

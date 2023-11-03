@@ -87,12 +87,12 @@ type Extent struct {
 
 type SpatialExtent struct {
 	Bbox [][]float64 `json:"bbox"`
-	Crs  string      `json:"crs"`
+	Crs  string      `json:"crs,omitempty"`
 }
 
 type TemporalExtent struct {
 	Interval [][]any `json:"interval"`
-	Trs      string  `json:"trs"`
+	Trs      string  `json:"trs,omitempty"`
 }
 
 type CollectionsList struct {
