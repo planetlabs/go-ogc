@@ -4,7 +4,7 @@ go 1.18
 
 require (
 	github.com/BurntSushi/toml v1.3.2
-	github.com/alecthomas/kong v0.8.1
+	github.com/alecthomas/kong v0.9.0
 	github.com/getkin/kin-openapi v0.123.0
 	github.com/go-playground/validator/v10 v10.18.0
 	github.com/labstack/echo/v4 v4.11.4
