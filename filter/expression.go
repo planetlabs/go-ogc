@@ -48,14 +48,6 @@ func decodeExpression(value any) (Expression, error) {
 	case []any:
 		return decodeArray(v)
 	case map[string]any:
-		if casei, ok := v["casei"]; ok {
-			return decodeCaseInsensitive(casei)
-		}
-
-		if accenti, ok := v["accenti"]; ok {
-			return decodeAccentInsensitive(accenti)
-		}
-
 		if dateString, ok := v["date"].(string); ok {
 			return decodeDate(dateString)
 		}
@@ -89,10 +81,6 @@ func decodeExpression(value any) (Expression, error) {
 				return nil, fmt.Errorf("expected args in %q op", opName)
 			}
 			return decodeOp(opName, args)
-		}
-
-		if function, ok := v["function"].(map[string]any); ok {
-			return decodeFunction(function)
 		}
 	}
 

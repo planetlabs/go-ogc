@@ -108,7 +108,7 @@ func TestTemporal(t *testing.T) {
 			data: `{
 				"op": "t_contains",
 				"args": [
-					{"interval": [{"date": "2000-01-01"}, {"date": "2020-01-01"}]},
+					{"interval": ["2000-01-01", "2020-01-01"]},
 					{"property": "datetime"}
 				]
 			}`,
@@ -162,7 +162,7 @@ func TestTemporal(t *testing.T) {
 				Expression: &filter.TemporalComparison{
 					Name: filter.TimeEquals,
 					Left: &filter.Function{
-						Name: "later",
+						Op: "later",
 						Args: []filter.Expression{
 							&filter.Property{"datetime"},
 							&filter.String{"1 month"},
@@ -175,10 +175,8 @@ func TestTemporal(t *testing.T) {
 				"op": "t_equals",
 				"args": [
 					{
-						"function": {
-							"name": "later",
-							"args": [{"property": "datetime"}, "1 month"]
-						}
+						"op": "later",
+						"args": [{"property": "datetime"}, "1 month"]
 					},
 					{"date": "2020-01-01"}
 				]
@@ -247,6 +245,25 @@ func TestTemporal(t *testing.T) {
 				"args": [
 					{"interval": [{"property": "start0"}, {"property": "end0"}]},
 					{"interval": [{"property": "start1"}, {"property": "end1"}]}
+				]
+			}`,
+		},
+		{
+			filter: &filter.Filter{
+				Expression: &filter.TemporalComparison{
+					Name: filter.TimeIntersects,
+					Left: &filter.Property{"datetime"},
+					Right: &filter.Interval{
+						Start: &filter.Timestamp{Value: time.Date(2020, time.November, 11, 0, 0, 0, 0, time.UTC)},
+						End:   &filter.Timestamp{Value: time.Date(2020, time.November, 12, 0, 0, 0, 0, time.UTC)},
+					},
+				},
+			},
+			data: `{
+				"op": "t_intersects",
+				"args": [
+					{"property": "datetime"},
+					{"interval": ["2020-11-11T00:00:00Z", "2020-11-12T00:00:00Z"] }
 				]
 			}`,
 		},
@@ -384,11 +401,18 @@ func TestTemporal(t *testing.T) {
 		},
 	}
 
+	schema := getSchema(t)
 	for i, c := range cases {
 		t.Run(fmt.Sprintf("case %d", i), func(t *testing.T) {
 			data, err := json.Marshal(c.filter)
 			require.NoError(t, err)
 			assert.JSONEq(t, c.data, string(data))
+
+			v := map[string]any{}
+			require.NoError(t, json.Unmarshal(data, &v))
+			if err := schema.Validate(v); err != nil {
+				t.Errorf("failed to validate\n%#v", err)
+			}
 
 			filter := &filter.Filter{}
 			require.NoError(t, json.Unmarshal([]byte(c.data), filter))

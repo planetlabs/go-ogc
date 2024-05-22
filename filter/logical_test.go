@@ -95,11 +95,18 @@ func TestLogical(t *testing.T) {
 		},
 	}
 
+	schema := getSchema(t)
 	for i, c := range cases {
 		t.Run(fmt.Sprintf("case %d", i), func(t *testing.T) {
 			data, err := json.Marshal(c.filter)
 			require.Nil(t, err)
 			assert.JSONEq(t, c.data, string(data))
+
+			v := map[string]any{}
+			require.NoError(t, json.Unmarshal(data, &v))
+			if err := schema.Validate(v); err != nil {
+				t.Errorf("failed to validate\n%#v", err)
+			}
 
 			filter := &filter.Filter{}
 			require.Nil(t, json.Unmarshal([]byte(c.data), filter))

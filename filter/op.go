@@ -41,6 +41,8 @@ var argCount = map[string]int{
 	betweenOp:           3,
 	inOp:                2,
 	isNullOp:            1,
+	caseInsensitiveOp:   1,
+	accentInsensitiveOp: 1,
 	Equals:              2,
 	NotEquals:           2,
 	LessThan:            2,
@@ -158,6 +160,22 @@ func decodeOp(name string, encodedArgs []any) (Expression, error) {
 	case isNullOp:
 		return &IsNull{Value: args[0]}, nil
 
+	case caseInsensitiveOp:
+		c, ok := args[0].(CharacterExpression)
+		if !ok {
+			return nil, fmt.Errorf("expected character expression in casei, got %v", args[0])
+		}
+
+		return &CaseInsensitive{Value: c}, nil
+
+	case accentInsensitiveOp:
+		c, ok := args[0].(CharacterExpression)
+		if !ok {
+			return nil, fmt.Errorf("expected character expression in accenti, got %v", args[0])
+		}
+
+		return &AccentInsensitive{Value: c}, nil
+
 	case Equals, NotEquals, LessThan, LessThanOrEquals, GreaterThan, GreaterThanOrEquals:
 		scalarArgs, err := toScalarArgs(name, args)
 		if err != nil {
@@ -185,9 +203,13 @@ func decodeOp(name string, encodedArgs []any) (Expression, error) {
 			return nil, err
 		}
 		return &TemporalComparison{Name: name, Left: temporalArgs[0], Right: temporalArgs[1]}, nil
+	default:
+		function := &Function{Op: name}
+		if len(args) > 0 {
+			function.Args = args
+		}
+		return function, nil
 	}
-
-	return nil, fmt.Errorf("unsupported %q op", name)
 }
 
 func toScalarArgs(name string, args []Expression) ([]ScalarExpression, error) {

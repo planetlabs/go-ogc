@@ -16,7 +16,11 @@ package filter
 
 import (
 	"encoding/json"
-	"fmt"
+)
+
+const (
+	caseInsensitiveOp   = "casei"
+	accentInsensitiveOp = "accenti"
 )
 
 type CharacterExpression interface {
@@ -46,19 +50,12 @@ func (*CaseInsensitive) characterExpression() {}
 func (*CaseInsensitive) patternExpression()   {}
 
 func (e *CaseInsensitive) MarshalJSON() ([]byte, error) {
-	return json.Marshal(map[string]CharacterExpression{"casei": e.Value})
-}
+	m := map[string]any{
+		"op":   "casei",
+		"args": []CharacterExpression{e.Value},
+	}
 
-func decodeCaseInsensitive(value any) (*CaseInsensitive, error) {
-	v, err := decodeExpression(value)
-	if err != nil {
-		return nil, fmt.Errorf("trouble decoding casei expression: %w", err)
-	}
-	c, ok := v.(CharacterExpression)
-	if !ok {
-		return nil, fmt.Errorf("expected character expression in casei, got %v", v)
-	}
-	return &CaseInsensitive{Value: c}, nil
+	return json.Marshal(m)
 }
 
 type AccentInsensitive struct {
@@ -78,7 +75,12 @@ func (*AccentInsensitive) characterExpression() {}
 func (*AccentInsensitive) patternExpression()   {}
 
 func (e *AccentInsensitive) MarshalJSON() ([]byte, error) {
-	return json.Marshal(map[string]CharacterExpression{"accenti": e.Value})
+	m := map[string]any{
+		"op":   "accenti",
+		"args": []CharacterExpression{e.Value},
+	}
+
+	return json.Marshal(m)
 }
 
 type String struct {
@@ -101,16 +103,4 @@ func (*String) arrayItemExpression() {}
 
 func (e *String) MarshalJSON() ([]byte, error) {
 	return json.Marshal(e.Value)
-}
-
-func decodeAccentInsensitive(value any) (*AccentInsensitive, error) {
-	v, err := decodeExpression(value)
-	if err != nil {
-		return nil, fmt.Errorf("trouble decoding accenti expression: %w", err)
-	}
-	c, ok := v.(CharacterExpression)
-	if !ok {
-		return nil, fmt.Errorf("expected character expression in accenti, got %v", v)
-	}
-	return &AccentInsensitive{Value: c}, nil
 }
