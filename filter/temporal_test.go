@@ -108,7 +108,7 @@ func TestTemporal(t *testing.T) {
 			data: `{
 				"op": "t_contains",
 				"args": [
-					{"interval": [{"date": "2000-01-01"}, {"date": "2020-01-01"}]},
+					{"interval": ["2000-01-01", "2020-01-01"]},
 					{"property": "datetime"}
 				]
 			}`,
@@ -247,6 +247,25 @@ func TestTemporal(t *testing.T) {
 				"args": [
 					{"interval": [{"property": "start0"}, {"property": "end0"}]},
 					{"interval": [{"property": "start1"}, {"property": "end1"}]}
+				]
+			}`,
+		},
+		{
+			filter: &filter.Filter{
+				Expression: &filter.TemporalComparison{
+					Name: filter.TimeIntersects,
+					Left: &filter.Property{"datetime"},
+					Right: &filter.Interval{
+						Start: &filter.Timestamp{Value: time.Date(2020, time.November, 11, 0, 0, 0, 0, time.UTC)},
+						End:   &filter.Timestamp{Value: time.Date(2020, time.November, 12, 0, 0, 0, 0, time.UTC)},
+					},
+				},
+			},
+			data: `{
+				"op": "t_intersects",
+				"args": [
+					{"property": "datetime"},
+					{"interval": ["2020-11-11T00:00:00Z", "2020-11-12T00:00:00Z"] }
 				]
 			}`,
 		},

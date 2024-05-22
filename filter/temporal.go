@@ -18,6 +18,7 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
+	"strings"
 	"time"
 )
 
@@ -124,6 +125,13 @@ func decodeTimestamp(value string) (*Timestamp, error) {
 	return &Timestamp{Value: timestamp}, nil
 }
 
+func decodeDateOrTimestamp(value string) (InstantExpression, error) {
+	if strings.Contains(value, "T") {
+		return decodeTimestamp(value)
+	}
+	return decodeDate(value)
+}
+
 type Interval struct {
 	Start InstantExpression
 	End   InstantExpression
@@ -143,12 +151,26 @@ func (e *Interval) MarshalJSON() ([]byte, error) {
 	if e.Start == nil {
 		items[0] = ".."
 	} else {
-		items[0] = e.Start
+		switch t := e.Start.(type) {
+		case *Date:
+			items[0] = t.Value.Format(time.DateOnly)
+		case *Timestamp:
+			items[0] = t.Value
+		default:
+			items[0] = e.Start
+		}
 	}
 	if e.End == nil {
 		items[1] = ".."
 	} else {
-		items[1] = e.End
+		switch t := e.End.(type) {
+		case *Date:
+			items[1] = t.Value.Format(time.DateOnly)
+		case *Timestamp:
+			items[1] = t.Value
+		default:
+			items[1] = e.End
+		}
 	}
 	return json.Marshal(map[string]any{"interval": items})
 }
@@ -168,11 +190,15 @@ func decodeInterval(values []any) (*Interval, error) {
 	switch s := startValue.(type) {
 	case *String:
 		if s.Value != nilInstant {
-			return nil, fmt.Errorf("expected date or timestamp expression, got %s", s.Value)
+			value, err := decodeDateOrTimestamp(s.Value)
+			if err != nil {
+				return nil, fmt.Errorf("expected date or timestamp expression, got %s", s.Value)
+			}
+			start = value
 		}
-	case *Date:
+	case *Date: // not allowed in the spec, remove in a future release
 		start = s
-	case *Timestamp:
+	case *Timestamp: // not allowed in the spec, remove in a future release
 		start = s
 	case *Property:
 		start = s
@@ -190,11 +216,15 @@ func decodeInterval(values []any) (*Interval, error) {
 	switch s := endValue.(type) {
 	case *String:
 		if s.Value != nilInstant {
-			return nil, fmt.Errorf("expected date or timestamp expression, got %s", s.Value)
+			value, err := decodeDateOrTimestamp(s.Value)
+			if err != nil {
+				return nil, fmt.Errorf("expected date or timestamp expression, got %s", s.Value)
+			}
+			end = value
 		}
-	case *Date:
+	case *Date: // not allowed in the spec, remove in a future release
 		end = s
-	case *Timestamp:
+	case *Timestamp: // not allowed in the spec, remove in a future release
 		end = s
 	case *Property:
 		end = s
