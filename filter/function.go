@@ -16,13 +16,11 @@ package filter
 
 import (
 	"encoding/json"
-	"errors"
-	"fmt"
 )
 
 type Function struct {
-	Name string
-	Args []Expression
+	Op   string       `json:"op"`
+	Args []Expression `json:"args"`
 }
 
 var (
@@ -47,37 +45,11 @@ func (*Function) temporalExpression()  {}
 
 func (e *Function) MarshalJSON() ([]byte, error) {
 	f := map[string]any{
-		"name": e.Name,
+		"op":   e.Op,
+		"args": e.Args,
 	}
-	if len(e.Args) > 0 {
-		f["args"] = e.Args
+	if e.Args == nil {
+		f["args"] = []Expression{}
 	}
-	return json.Marshal(map[string]any{"function": f})
-}
-
-func decodeFunction(function map[string]any) (*Function, error) {
-	name, ok := function["name"].(string)
-	if !ok {
-		return nil, errors.New("missing function name")
-	}
-
-	argsValue, ok := function["args"]
-	if !ok {
-		return &Function{Name: name}, nil
-	}
-
-	argsSlice, ok := argsValue.([]any)
-	if !ok {
-		return nil, errors.New("expected function args to be an array")
-	}
-
-	args := make([]Expression, len(argsSlice))
-	for i, arg := range argsSlice {
-		argument, err := decodeExpression(arg)
-		if err != nil {
-			return nil, fmt.Errorf("trouble parsing function argument %d: %w", i, err)
-		}
-		args[i] = argument
-	}
-	return &Function{Name: name, Args: args}, nil
+	return json.Marshal(f)
 }
