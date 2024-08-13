@@ -17,7 +17,7 @@ package api
 import (
 	"encoding/json"
 
-	"github.com/mitchellh/mapstructure"
+	"github.com/go-viper/mapstructure/v2"
 )
 
 // Structs for the Common spec.
@@ -51,11 +51,6 @@ func (link *Link) MarshalJSON() ([]byte, error) {
 	m := map[string]any{}
 	if err := mapstructure.Decode(link, &m); err != nil {
 		return nil, err
-	}
-	// remove if https://github.com/mitchellh/mapstructure/issues/279 is fixed
-	delete(m, "AdditionalFields")
-	for k, v := range link.AdditionalFields {
-		m[k] = v
 	}
 	return json.Marshal(m)
 }
