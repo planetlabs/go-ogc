@@ -6,7 +6,7 @@ require (
 	github.com/BurntSushi/toml v1.4.0
 	github.com/alecthomas/kong v0.9.0
 	github.com/getkin/kin-openapi v0.127.0
-	github.com/go-playground/validator/v10 v10.22.0
+	github.com/go-playground/validator/v10 v10.22.1
 	github.com/go-viper/mapstructure/v2 v2.1.0
 	github.com/labstack/echo/v4 v4.12.0
 	github.com/phayes/freeport v0.0.0-20220201140144-74d24b5ae9f5
