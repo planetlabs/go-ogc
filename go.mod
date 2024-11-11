@@ -4,7 +4,7 @@ go 1.18
 
 require (
 	github.com/BurntSushi/toml v1.4.0
-	github.com/alecthomas/kong v1.3.0
+	github.com/alecthomas/kong v1.4.0
 	github.com/getkin/kin-openapi v0.128.0
 	github.com/go-playground/validator/v10 v10.22.1
 	github.com/go-viper/mapstructure/v2 v2.2.1
