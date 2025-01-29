@@ -45,3 +45,10 @@ func (e *Boolean) MarshalJSON() ([]byte, error) {
 	}
 	return []byte("false"), nil
 }
+
+func (e *Boolean) String() string {
+	if e.Value {
+		return "true"
+	}
+	return "false"
+}

@@ -50,8 +50,12 @@ func (e *Comparison) MarshalJSON() ([]byte, error) {
 	return marshalOp(e.Name, args)
 }
 
+func (e *Comparison) String() string {
+	return toString(e)
+}
+
 type Like struct {
-	String  CharacterExpression
+	Value   CharacterExpression
 	Pattern PatternExpression
 }
 
@@ -66,8 +70,12 @@ func (*Like) scalarExpression()  {}
 func (*Like) booleanExpression() {}
 
 func (e *Like) MarshalJSON() ([]byte, error) {
-	args := []Expression{e.String, e.Pattern}
+	args := []Expression{e.Value, e.Pattern}
 	return marshalOp(likeOp, args)
+}
+
+func (e *Like) String() string {
+	return toString(e)
 }
 
 type Between struct {
@@ -91,6 +99,10 @@ func (e *Between) MarshalJSON() ([]byte, error) {
 	return marshalOp(betweenOp, args)
 }
 
+func (e *Between) String() string {
+	return toString(e)
+}
+
 type ScalarList []ScalarExpression
 
 var (
@@ -99,6 +111,10 @@ var (
 
 func (ScalarList) expression()       {}
 func (ScalarList) scalarExpression() {}
+
+func (e ScalarList) String() string {
+	return sliceToString(e)
+}
 
 type In struct {
 	Item ScalarExpression
@@ -120,6 +136,10 @@ func (e *In) MarshalJSON() ([]byte, error) {
 	return marshalOp(inOp, args)
 }
 
+func (e *In) String() string {
+	return toString(e)
+}
+
 type IsNull struct {
 	Value Expression
 }
@@ -137,4 +157,8 @@ func (*IsNull) booleanExpression() {}
 func (e *IsNull) MarshalJSON() ([]byte, error) {
 	args := []Expression{e.Value}
 	return marshalOp(isNullOp, args)
+}
+
+func (e *IsNull) String() string {
+	return toString(e)
 }

@@ -40,3 +40,7 @@ func (*Number) arrayItemExpression() {}
 func (e *Number) MarshalJSON() ([]byte, error) {
 	return json.Marshal(e.Value)
 }
+
+func (e *Number) String() string {
+	return toString(e)
+}

@@ -53,3 +53,7 @@ func (e *Function) MarshalJSON() ([]byte, error) {
 	}
 	return json.Marshal(f)
 }
+
+func (e *Function) String() string {
+	return toString(e)
+}

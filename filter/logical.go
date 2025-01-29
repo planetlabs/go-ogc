@@ -43,6 +43,10 @@ func (e *Not) MarshalJSON() ([]byte, error) {
 	return marshalOp(notOp, args)
 }
 
+func (e *Not) String() string {
+	return toString(e)
+}
+
 type And struct {
 	Args []BooleanExpression
 }
@@ -65,6 +69,10 @@ func (e *And) MarshalJSON() ([]byte, error) {
 	return marshalOp(andOp, args)
 }
 
+func (e *And) String() string {
+	return toString(e)
+}
+
 type Or struct {
 	Args []BooleanExpression
 }
@@ -85,4 +93,8 @@ func (e *Or) MarshalJSON() ([]byte, error) {
 		args[i] = arg
 	}
 	return marshalOp(orOp, args)
+}
+
+func (e *Or) String() string {
+	return toString(e)
 }

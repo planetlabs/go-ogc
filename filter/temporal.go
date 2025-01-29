@@ -61,6 +61,10 @@ func (e *TemporalComparison) MarshalJSON() ([]byte, error) {
 	return marshalOp(e.Name, args)
 }
 
+func (e *TemporalComparison) String() string {
+	return toString(e)
+}
+
 type TemporalExpression interface {
 	Expression
 	temporalExpression()
@@ -90,6 +94,10 @@ func (e *Date) MarshalJSON() ([]byte, error) {
 	return json.Marshal(map[string]string{"date": e.Value.Format(time.DateOnly)})
 }
 
+func (e *Date) String() string {
+	return toString(e)
+}
+
 func decodeDate(value string) (*Date, error) {
 	date, err := time.Parse(time.DateOnly, value)
 	if err != nil {
@@ -115,6 +123,10 @@ func (*Timestamp) temporalExpression() {}
 
 func (e *Timestamp) MarshalJSON() ([]byte, error) {
 	return json.Marshal(map[string]string{"timestamp": e.Value.Format(time.RFC3339Nano)})
+}
+
+func (e *Timestamp) String() string {
+	return toString(e)
 }
 
 func decodeTimestamp(value string) (*Timestamp, error) {
@@ -173,6 +185,10 @@ func (e *Interval) MarshalJSON() ([]byte, error) {
 		}
 	}
 	return json.Marshal(map[string]any{"interval": items})
+}
+
+func (e *Interval) String() string {
+	return toString(e)
 }
 
 const nilInstant = ".."
