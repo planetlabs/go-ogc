@@ -43,3 +43,7 @@ func (*Property) temporalExpression()  {}
 func (e *Property) MarshalJSON() ([]byte, error) {
 	return json.Marshal(map[string]string{"property": e.Name})
 }
+
+func (e *Property) String() string {
+	return toString(e)
+}

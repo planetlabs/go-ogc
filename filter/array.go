@@ -47,6 +47,10 @@ func (e *ArrayComparison) MarshalJSON() ([]byte, error) {
 	return marshalOp(e.Name, args)
 }
 
+func (e *ArrayComparison) String() string {
+	return toString(e)
+}
+
 type ArrayItemExpression interface {
 	Expression
 	arrayItemExpression()
@@ -83,4 +87,8 @@ func decodeArray(values []any) (Array, error) {
 		items[i] = item
 	}
 	return items, nil
+}
+
+func (a Array) String() string {
+	return sliceToString(a)
 }

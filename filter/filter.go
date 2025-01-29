@@ -52,3 +52,7 @@ func (f *Filter) UnmarshalJSON(data []byte) error {
 	f.Expression = booleanExpression
 	return nil
 }
+
+func (e *Filter) String() string {
+	return toString(e)
+}

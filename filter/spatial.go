@@ -52,6 +52,10 @@ func (e *SpatialComparison) MarshalJSON() ([]byte, error) {
 	return marshalOp(e.Name, args)
 }
 
+func (e *SpatialComparison) String() string {
+	return toString(e)
+}
+
 type SpatialExpression interface {
 	Expression
 	spatialExpression()
@@ -74,6 +78,10 @@ func (*Geometry) arrayItemExpression() {}
 
 func (e *Geometry) MarshalJSON() ([]byte, error) {
 	return json.Marshal(e.Value)
+}
+
+func (e *Geometry) String() string {
+	return toString(e)
 }
 
 var geometryTypes = map[string]bool{
@@ -126,6 +134,10 @@ func (*BoundingBox) arrayItemExpression() {}
 
 func (e *BoundingBox) MarshalJSON() ([]byte, error) {
 	return json.Marshal(map[string][]float64{"bbox": e.Extent})
+}
+
+func (e *BoundingBox) String() string {
+	return toString(e)
 }
 
 func decodeBoundingBox(bbox []any) (*BoundingBox, error) {

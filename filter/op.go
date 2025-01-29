@@ -35,6 +35,27 @@ func marshalOp(name string, args []Expression) ([]byte, error) {
 	return buffer.Bytes(), nil
 }
 
+func toString(e json.Marshaler) string {
+	v, err := e.MarshalJSON()
+	if err != nil {
+		return fmt.Sprintf("%#v", e)
+	}
+	return string(v)
+}
+
+func sliceToString[T Expression](e []T) string {
+	buffer := &bytes.Buffer{}
+	buffer.WriteString("[")
+	for i, item := range e {
+		if i > 0 {
+			buffer.WriteString(", ")
+		}
+		buffer.WriteString(item.String())
+	}
+	buffer.WriteString("]")
+	return buffer.String()
+}
+
 var argCount = map[string]int{
 	notOp:               1,
 	likeOp:              2,
@@ -129,7 +150,7 @@ func decodeOp(name string, encodedArgs []any) (Expression, error) {
 		if !ok {
 			return nil, fmt.Errorf("expected a pattern expression for arg 1 of %q op", name)
 		}
-		return &Like{String: str, Pattern: pattern}, nil
+		return &Like{Value: str, Pattern: pattern}, nil
 
 	case betweenOp:
 		numericArgs, err := toNumericArgs(name, args)

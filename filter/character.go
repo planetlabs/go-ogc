@@ -58,6 +58,10 @@ func (e *CaseInsensitive) MarshalJSON() ([]byte, error) {
 	return json.Marshal(m)
 }
 
+func (e *CaseInsensitive) String() string {
+	return toString(e)
+}
+
 type AccentInsensitive struct {
 	Value CharacterExpression
 }
@@ -83,6 +87,10 @@ func (e *AccentInsensitive) MarshalJSON() ([]byte, error) {
 	return json.Marshal(m)
 }
 
+func (e *AccentInsensitive) String() string {
+	return toString(e)
+}
+
 type String struct {
 	Value string
 }
@@ -103,4 +111,8 @@ func (*String) arrayItemExpression() {}
 
 func (e *String) MarshalJSON() ([]byte, error) {
 	return json.Marshal(e.Value)
+}
+
+func (e *String) String() string {
+	return toString(e)
 }

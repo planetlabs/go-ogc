@@ -22,6 +22,7 @@ import (
 
 type Expression interface {
 	expression()
+	String() string
 }
 
 type ScalarExpression interface {
