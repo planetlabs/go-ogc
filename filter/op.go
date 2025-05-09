@@ -26,7 +26,7 @@ func marshalOp(name string, args []Expression) ([]byte, error) {
 	encoder.SetEscapeHTML(false)
 	encoder.SetIndent("", "")
 
-	buffer.WriteString(fmt.Sprintf(`{"op":"%s","args":`, name))
+	fmt.Fprintf(buffer, `{"op":"%s","args":`, name)
 	if err := encoder.Encode(args); err != nil {
 		return nil, fmt.Errorf("failed to encode %q expression arguments: %w", name, err)
 	}
