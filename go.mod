@@ -3,7 +3,7 @@ module github.com/planetlabs/go-ogc
 go 1.24.0
 
 require (
-	github.com/BurntSushi/toml v1.5.0
+	github.com/BurntSushi/toml v1.6.0
 	github.com/alecthomas/kong v1.12.1
 	github.com/getkin/kin-openapi v0.133.0
 	github.com/go-playground/validator/v10 v10.28.0
